@@ -1,7 +1,36 @@
-import React from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import '../styles/form.css'
+import { AuthContext } from '../store/context/auth';
+import { Redirect, Link } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
 
 const LoginPage = () => {
+    const { auth, handleLogin } = useContext(AuthContext);
+
+    const [validated, setValidated] = useState(false);
+
+    const userEmail = useRef();
+    const userPassword = useRef();
+
+    const handleSubmit = event => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            const values = {
+                email: userEmail.current.value,
+                password: userPassword.current.value
+            }
+            handleLogin(values);
+        }
+        setValidated(true);
+    };
+
+    if (auth) {
+        return <Redirect to='/' />
+    }
     return (
         <div className='login-body'>
             <div className='container'>
@@ -10,22 +39,30 @@ const LoginPage = () => {
                         <div className='card card-signin my-5'>
                             <div className='card-body'>
                                 <h5 className='card-title text-center'>Sign In</h5>
-                                <form className='form-signin'>
-                                    <div className='form-label-group'>
-                                        <input type='email' id='inputEmail' className='form-control' placeholder='Email address' required autofocus />
-                                        <label for='inputEmail'>Email address</label>
-                                    </div>
+                                <Form className='form-signin' noValidate validated={validated} onSubmit={handleSubmit}>
+                                    <Form.Group controlId="email">
+                                        <Form.Label>Email address</Form.Label>
+                                        <Form.Control
+                                            required
+                                            type='email'
+                                            autoFocus
+                                            ref={userEmail}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group controlId="password">
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control
+                                            type='password'
+                                            required
+                                            ref={userPassword}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.Text><Link to='/signup'>Not a member?</Link></Form.Text>
+                                    </Form.Group>
 
-                                    <div className='form-label-group'>
-                                        <input type='password' id='inputPassword' className='form-control' placeholder='Password' required />
-                                        <label for='inputPassword'>Password</label>
-                                    </div>
-
-                                    <div className='custom-control mb-3'>
-                                        <label>Not a member?</label>
-                                    </div>
-                                    <button className='btn btn-lg btn-primary btn-block text-uppercase' type='submit'>Sign in</button>
-                                </form>
+                                    <Button className='btn btn-lg btn-primary btn-block text-uppercase' type="submit">Sign in</Button>
+                                </Form>
                             </div>
                         </div>
                     </div>

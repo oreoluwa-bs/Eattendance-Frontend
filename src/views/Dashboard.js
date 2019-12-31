@@ -1,13 +1,12 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+// import { Switch, Route, Link } from 'react-router-dom';
+import Main from './Main';
+// import MeetUpAttendace from './MeetUpAttendance';
 
 const Dashbaord = () => {
     return (
         <div>
-            <Switch>
-                <Route exact path='/' component={() => <div>Hi</div>} />
-                {/* <Route exact path='/manage-courses' component={() => <div>Hi</div>} /> */}
-            </Switch>
+            <Main />
         </div>
     );
 }
